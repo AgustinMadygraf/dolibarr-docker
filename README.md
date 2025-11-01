@@ -1,8 +1,8 @@
 # Dolibarr on Docker
 
-Docker image for Dolibarr ERP & CRM Open source web suite.
+Imagen Docker para Dolibarr ERP & CRM suite web de código abierto.
 
-Dolibarr is a modern software package to manage your organization's activity (contacts, quotes, invoices, orders, stocks, agenda, hr, expense reports, accountancy, ecm, manufacturing, ...).
+Dolibarr es un software moderno para gestionar la actividad de tu organización (contactos, presupuestos, facturas, pedidos, stocks, agenda, RRHH, informes de gastos, contabilidad, ecm, fabricación, ...).
 
 > [More information](https://github.com/dolibarr/dolibarr)
 
@@ -20,6 +20,17 @@ Linux x86-64 (`amd64`) and ARMv8 64-bit (`arm64v8`).
 
 
 ## How to run this image ?
+## ¿Cómo ejecutar esta imagen?
+
+Esta imagen está basada en el [repositorio oficial de PHP](https://hub.docker.com/_/php/) y el [repositorio oficial de Dolibarr](https://github.com/Dolibarr/dolibarr). Se construye usando las herramientas guardadas en el [repositorio de construcción Docker de Dolibarr](https://github.com/Dolibarr/dolibarr-docker).
+
+Esta imagen no contiene base de datos, por lo que necesitas enlazarla con un contenedor de base de datos. Veamos cómo usar [Docker Compose](https://docs.docker.com/compose/) para integrarla con [MariaDB](https://hub.docker.com/_/mariadb/) (también puedes usar [MySQL](https://hub.docker.com/_/mysql/) si lo prefieres):
+
+Si quieres tener una base de datos persistente y archivos de Dolibarr después de un reinicio o actualización, primero debes crear los directorios `/home/dolibarr_mariadb`, `/home/dolibarr_documents` y `/home/dolibarr_custom` en tu host para almacenar los archivos persistentes, respectivamente, de la base de datos, de los documentos de Dolibarr y de los módulos externos instalados.
+
+`mkdir /home/dolibarr_mariadb /home/dolibarr_documents /home/dolibarr_custom;`
+
+Luego, crea un archivo `docker-compose.yml` como el siguiente:
 
 This image is based on the [official PHP repository](https://hub.docker.com/_/php/) and the [official Dolibarr repository](https://github.com/Dolibarr/dolibarr). It is build
 using the tools saved in the [Dolibarr docker build repository](https://github.com/Dolibarr/dolibarr-docker). 
@@ -52,216 +63,244 @@ services:
 
     web:
         # Choose the version of image to install
-        # dolibarr/dolibarr:latest (the latest stable version)
-        # dolibarr/dolibarr:develop
-        # dolibarr/dolibarr:x.y.z
-        image: dolibarr/dolibarr:latest
-        environment:
-            DOLI_INIT_DEMO: ${DOLI_INIT_DEMO:-0}
-            DOLI_DB_HOST: ${DOLI_DB_HOST:-mariadb}
-            DOLI_DB_NAME: ${DOLI_DB_NAME:-dolidb}
-            DOLI_DB_USER: ${DOLI_DB_USER:-dolidbuser}
-            DOLI_DB_PASSWORD: ${DOLI_DB_PASSWORD:-dolidbpass}
-            DOLI_URL_ROOT: "${DOLI_URL_ROOT:-http://0.0.0.0}"
-            DOLI_ADMIN_LOGIN: "${DOLI_ADMIN_LOGIN:-admin}"
-            DOLI_ADMIN_PASSWORD: "${DOLI_ADMIN_PASSWORD:-admin}"
-            DOLI_CRON: ${DOLI_CRON:-0}
-            DOLI_CRON_KEY: ${DOLI_CRON_KEY:-mycronsecurekey}
-            DOLI_COMPANY_NAME: ${DOLI_COMPANY_NAME:-MyBigCompany}
-            WWW_USER_ID: ${WWW_USER_ID:-1000}
-            WWW_GROUP_ID: ${WWW_GROUP_ID:-1000}
 
-        ports:
+        # Dolibarr en Docker
+
+        Imagen Docker para Dolibarr ERP & CRM, suite web de código abierto.
+
+        Dolibarr es un software moderno para gestionar la actividad de tu organización (contactos, presupuestos, facturas, pedidos, stocks, agenda, RRHH, informes de gastos, contabilidad, ECM, fabricación, ...).
+
+        > [Más información](https://github.com/dolibarr/dolibarr)
+            DOLI_CRON_KEY: ${DOLI_CRON_KEY:-mycronsecurekey}
+
+        ## Versiones/tags disponibles en Docker
+
+        Consulta https://hub.docker.com/r/dolibarr/dolibarr/tags
+
+        *Las versiones muy antiguas de Dolibarr pueden no estar actualizadas en Docker Hub, pero siempre puedes obtenerlas como paquete zip estándar desde el sitio oficial de Dolibarr.*
             - "80:80"
-        links:
-            - mariadb
-        volumes:
+
+        ## Arquitecturas soportadas
+
+        Linux x86-64 (`amd64`) y ARMv8 64-bit (`arm64v8`).
             - /home/dolibarr_documents:/var/www/documents
-            - /home/dolibarr_custom:/var/www/html/custom
+
+        ## ¿Cómo ejecutar esta imagen?
+
+        Esta imagen está basada en el [repositorio oficial de PHP](https://hub.docker.com/_/php/) y el [repositorio oficial de Dolibarr](https://github.com/Dolibarr/dolibarr). Se construye usando las herramientas guardadas en el [repositorio de construcción Docker de Dolibarr](https://github.com/Dolibarr/dolibarr-docker).
+
+        Esta imagen no contiene base de datos, por lo que necesitas enlazarla con un contenedor de base de datos. Veamos cómo usar [Docker Compose](https://docs.docker.com/compose/) para integrarla con [MariaDB](https://hub.docker.com/_/mariadb/) (también puedes usar [MySQL](https://hub.docker.com/_/mysql/) si lo prefieres):
+
+        Si quieres tener una base de datos persistente y archivos de Dolibarr después de un reinicio o actualización, primero debes crear los directorios `/home/dolibarr_mariadb`, `/home/dolibarr_documents` y `/home/dolibarr_custom` en tu host para almacenar los archivos persistentes, respectivamente, de la base de datos, de los documentos de Dolibarr y de los módulos externos instalados.
+
+        `mkdir /home/dolibarr_mariadb /home/dolibarr_documents /home/dolibarr_custom;`
+
+        Luego, crea un archivo `docker-compose.yml` como el siguiente:
+Si tienes problemas con la instalación y necesitas eliminar el archivo `install.lock` desde Windows usando PowerShell y Docker Compose, puedes ejecutar los siguientes comandos:
+
+```powershell
+
+        Luego, construye y ejecuta todos los servicios (usa -d para ejecutarlos en segundo plano):
+
+        `sudo docker-compose up -d`
+
+        Si el comando "docker-compose" no está disponible, puedes reemplazarlo por "docker compose".
+
+        Puedes verificar que los contenedores web y mariadb están activos y ver los logs con:
+
+        `sudo docker-compose ps`
+        `sudo docker-compose logs`
+
+        Cuando el log muestre que el inicio está completo (deberías ver el mensaje "You can connect to your Dolibarr web application..."), accede a http://0.0.0.0 para iniciar la instalación de Dolibarr. El primer usuario administrador es admin/admin (si no cambiaste el valor por defecto en el archivo docker-compose.yml).
+
+        Nota: Si el puerto 80 del host ya está en uso, puedes reemplazar "80:80" por "xx:80", donde xx es un puerto libre en el host. Podrás acceder a Dolibarr usando la URL http://0.0.0.0:xx
+accounting                 banque    doctemplates  expensereport  holiday     migration_error.html  salaries
+backup-before-upgrade.sql  bom       don           facture        margin      product               users
+
+        ## Ejemplo de comandos PowerShell para eliminar install.lock y reiniciar contenedores
+
+        Si tienes problemas con la instalación y necesitas eliminar el archivo `install.lock` desde Windows usando PowerShell y Docker Compose, puedes ejecutar los siguientes comandos:
+ ✔ Container dolibarr-docker-cron-1     Started                                                               10.8s 
+ ✔ Container dolibarr-docker-mariadb-1  Started                                                                1.1s 
+ ✔ Container dolibarr-docker-web-1      Started                                                                2.5s 
+
+        Después de esto, accede nuevamente a `http://localhost:81/` y sigue el asistente de instalación para crear las tablas y finalizar la configuración.
 ```
 
-Then build and run all services (-d is to run in background).
+        Otros ejemplos:
 
-`sudo docker-compose up -d`
-
-If the "docker-compose" command is not available, you can replace it with the command "docker compose".
-
-You can verify that the web and the mariadb containers are up and see logs with
-
-`sudo docker-compose ps`
-
-`sudo docker-compose logs`
-
-Once the log shows that the start is complete (you should see a message "You can connect to your Dolibarr web application..."), go to http://0.0.0.0 to access to the new Dolibarr installation, first admin login is admin/admin (if you did not change default value previously in the docker-compose.yml file). 
-
-Note: If the host port 80 is already used, you can replace "80:80" with "xx:80" where xx is a free port number on the host. You will be
-able to access the Dolibarr using the URL http://0.0.0.0:xx
-
-
-Other examples:
-
-You can find other examples of docker-compose.yml file for enhanced use in the `examples` directory, such as:
+        Puedes encontrar otros ejemplos de archivos docker-compose.yml para usos avanzados en el directorio `examples`, como:
+         - [Dolibarr con cron (para el módulo de tareas programadas)](https://github.com/Dolibarr/dolibarr-docker/tree/main/examples/with-cron/)
+         - [Dolibarr con certificado letsencrypt](https://github.com/Dolibarr/dolibarr-docker/tree/main/examples/with-certbot/)
+         - [Dolibarr con servidor mysql](https://github.com/Dolibarr/dolibarr-docker/tree/main/examples/with-mysql/)
+         - [Dolibarr con proxy reverso Traefik](https://github.com/Dolibarr/dolibarr-docker/tree/main/examples/with-rp-traefik/)
+         - [Dolibarr con secrets](https://github.com/Dolibarr/dolibarr-docker/tree/main/examples/with-secrets/)
  - [Running Dolibarr with the cron (for Scheduled Tasks module)](https://github.com/Dolibarr/dolibarr-docker/tree/main/examples/with-cron/)
  - [Running Dolibarr with a letsencrypt certificate](https://github.com/Dolibarr/dolibarr-docker/tree/main/examples/with-certbot/)
- - [Running Dolibarr with a mysql server](https://github.com/Dolibarr/dolibarr-docker/tree/main/examples/with-mysql/)
- - [Running Dolibarr with a Traefik reverse proxy](https://github.com/Dolibarr/dolibarr-docker/tree/main/examples/with-rp-traefik/)
- - [Running Dolibarr with secrets](https://github.com/Dolibarr/dolibarr-docker/tree/main/examples/with-secrets/)
 
 
-## Upgrading Dolibarr version and migrating DB
+        ## Actualización de versión de Dolibarr y migración de la base de datos
 
-Warning: Only data stored into the persistent directories (see the section "volumes" of your docker-compose.yml) will not be lost after an upgrade of containers.
+        Advertencia: Solo los datos almacenados en los directorios persistentes (ver la sección "volumes" de tu docker-compose.yml) no se perderán tras una actualización de los contenedores.
 
-Remove the `install.lock` file located inside the container volume `/var/www/documents` using one of this method:
+        Elimina el archivo `install.lock` ubicado dentro del volumen del contenedor `/var/www/documents` usando alguno de estos métodos:
 
-`sudo docker exec nameofwebcontainer bash -c "rm -f /var/www/documents/install.lock"`
+        `sudo docker exec nombre_del_contenedor_web bash -c "rm -f /var/www/documents/install.lock"`
 
-or
+        o
 
-`sudo docker exec -it nameofwebcontainer bash`
+        `sudo docker exec -it nombre_del_contenedor_web bash`
+        `rm -f /var/www/documents/install.lock; exit`
 
-`rm -f /var/www/documents/install.lock; exit`
+        o si el directorio de documentos está configurado como directorio persistente, puedes hacerlo desde el host:
 
-or if the document directory has been set as a persistent directory, you can do it from the host:
+        `rm -f /home/dolibarr_documents/install.lock`
 
-`rm -f /home/dolibarr_documents/install.lock`
+        Luego descarga la versión actualizada de los contenedores y reinícialos:
 
+        `sudo docker-compose pull`
+        `sudo docker-compose up -d`
+        `sudo docker-compose logs`
 
-Then download the updated version of containers and restart them.
-
-`sudo docker-compose pull`
-
-`sudo docker-compose up -d`
+        Asegúrate de que la variable de entorno `DOLI_INSTALL_AUTO` en tu docker-compose.yml esté en `1` para que la base de datos se migre automáticamente a la nueva versión, o puedes preferir usar el método estándar de actualización de Dolibarr a través de la interfaz web accediendo a la página /install.
 
 `sudo docker-compose logs`
 
-Ensure that env `DOLI_INSTALL_AUTO` in your docker-compose.yml is set to `1` so it will migrate the Database to the new version, or
-you can prefer to use the standard way to upgrade Dolibarr through the web interface by calling the /install page.
+        ## Resumen de variables de entorno
+
+        Puedes usar las siguientes variables para una mejor personalización de tu archivo docker-compose:
 
 
 ## Environment variables summary
 
-You can use the following variables for a better customization of your docker-compose file.
+        Algunas variables de entorno son compatibles con el comportamiento de docker secrets, solo agrega el sufijo `_FILE` al nombre de la variable y apunta al archivo que contiene el valor.
+        Variables compatibles con docker secrets:
 
-| Variable                        | Default value                  | Description |
-| ------------------------------- | ------------------------------ | ----------- |
-| **DOLI_INSTALL_AUTO**           | *1*                            | 1: The installation will be done during docker first boot
-| **DOLI_INIT_DEMO**              | *0*                            | 1: The installation will also load demo data during docker first boot
-| **DOLI_PROD**                   | *1*                            | 1: Dolibarr will be run in production mode
-| **DOLI_INSTANCE_UNIQUE_ID**     |                                | Secret ID used as a salt / key for some encryption. By default, it is set randomly when the docker container is created.
-| **DOLI_DB_TYPE**                | *mysqli*                       | Type of the DB server (**mysqli**, pgsql)
+        * `DOLI_INSTANCE_UNIQUE_ID` => `DOLI_INSTANCE_UNIQUE_ID_FILE`
+        * `DOLI_DB_USER` => `DOLI_DB_USER_FILE`
+        * `DOLI_DB_PASSWORD` => `DOLI_DB_PASSWORD_FILE`
+        * `DOLI_ADMIN_LOGIN` => `DOLI_ADMIN_LOGIN_FILE`
+        * `DOLI_ADMIN_PASSWORD` => `DOLI_ADMIN_PASSWORD_FILE`
+        * `DOLI_CRON_KEY` => `DOLI_CRON_KEY_FILE`
+        * `DOLI_CRON_USER` => `DOLI_CRON_USER_FILE`
 | **DOLI_DB_HOST**                | *mariadb*                      | Host name of the MariaDB/MySQL server
 | **DOLI_DB_HOST_PORT**           | *3306*                         | Host port of the MariaDB/MySQL server
-| **DOLI_DB_NAME**                | *dolidb*                       | Database name
-| **DOLI_DB_USER**                | *dolidbuser*                   | Database user
-| **DOLI_DB_PASSWORD**            | *dolidbpass*                   | Database user's password
-| **DOLI_DB_SSL**                 | *false*                        | Enable encrypted database connections (MySQL and Dolibarr >v19 required)
-| **DOLI_URL_ROOT**               | *http://localhost*             | Url root of the Dolibarr installation
-| **DOLI_ADMIN_LOGIN**            | *admin*                        | Admin's login created on the first boot
-| **DOLI_ADMIN_PASSWORD**         | *admin*                        | Admin's initial password created on the first boot
-| **DOLI_ENABLE_MODULES**         |                                | Comma-separated list of modules to be activated at install. modUser will always be activated. (Ex: `Societe,Facture,Stock`). Modules can't be activated correctly if DOLI_COMPANY_NAME and DOLI_COMPANY_COUNTRYCODE are not set
-| **DOLI_COMPANY_NAME**           |                                | Set the company name of Dolibarr at container init
-| **DOLI_COMPANY_COUNTRYCODE**    |                                | Set the company and Dolibarr country at container init. Need 2-letter codes like "FR", "GB", "US",...
-| **DOLI_AUTH**                   | *dolibarr*                     | Which method is used to connect users, change to `ldap` or `ldap, dolibarr` to use LDAP
-| **DOLI_LDAP_HOST**              | *127.0.0.1*                    | The host of the LDAP server
-| **DOLI_LDAP_PORT**              | *389*                          | The port of the LDAP server
-| **DOLI_LDAP_VERSION**           | *3*                            | The version of LDAP to use
-| **DOLI_LDAP_SERVER_TYPE**       | *openldap*                     | The type of LDAP server (openLDAP, Active Directory, eGroupWare)
-| **DOLI_LDAP_LOGIN_ATTRIBUTE**   | *uid*                          | The attribute used to bind users
-| **DOLI_LDAP_DN**                | *ou=users,dc=my-domain,dc=com* | The base where to look for users
-| **DOLI_LDAP_FILTER**            |                                | The filter to authorise users to connect
-| **DOLI_LDAP_BIND_DN**           |                                | The complete DN of the user with read access on users
-| **DOLI_LDAP_BIND_PASS**         |                                | The password of the bind user
-| **DOLI_LDAP_DEBUG**             | *false*                        | Activate debug mode
-| **DOLI_CRON**                   | *0*                            | 1: Enable cron service
-| **DOLI_CRON_KEY**               |                                | Security key to launch cron jobs
-| **DOLI_CRON_USER**              |                                | Dolibarr user used to launch cron jobs (will use firstadmin if not defined)
-| **WWW_USER_ID**                 |                                | ID of user www-data. ID will not changed if leave empty. During a development, it is very practical to put the same ID as the host user.
-| **WWW_GROUP_ID**                |                                | ID of group www-data. ID will not changed if leave empty.
-| **PHP_INI_DATE_TIMEZONE**       | *UTC*                          | Default timezone on PHP
-| **PHP_INI_MEMORY_LIMIT**        | *256M*                         | PHP Memory limit
-| **PHP_INI_UPLOAD_MAX_FILESIZE** | *2M*                           | PHP Maximum allowed size for uploaded files
-| **PHP_INI_POST_MAX_SIZE**       | *8M*                           | PHP Maximum size of POST data that PHP will accept.
-| **PHP_INI_ALLOW_URL_FOPEN**     | *0*                            | Allow URL-aware fopen wrappers
 
-Some environment variables are compatible with docker secrets behaviour, just add the `_FILE` suffix to var name and point the value file to read.
-Environment variables that are compatible with docker secrets:
+        ## Configuración avanzada
 
-* `DOLI_INSTANCE_UNIQUE_ID` => `DOLI_INSTANCE_UNIQUE_ID_FILE`
-* `DOLI_DB_USER` => `DOLI_DB_USER_FILE`
-* `DOLI_DB_PASSWORD` => `DOLI_DB_PASSWORD_FILE`
-* `DOLI_ADMIN_LOGIN` => `DOLI_ADMIN_LOGIN_FILE`
-* `DOLI_ADMIN_PASSWORD` => `DOLI_ADMIN_PASSWORD_FILE`
-* `DOLI_CRON_KEY` => `DOLI_CRON_KEY_FILE`
-* `DOLI_CRON_USER` => `DOLI_CRON_USER_FILE`
+        ### Agregar scripts personalizados post-despliegue y antes de iniciar Apache
 
+        Es posible ejecutar archivos personalizados `*.sh`, `*.sql` y/o `*.php` al final del despliegue o antes de iniciar Apache, montando volúmenes.
+        Para scripts que se ejecutan durante el despliegue, monta el volumen en `/var/www/scripts/docker-init.d`.
+        Para scripts que se ejecutan antes de iniciar Apache, monta el volumen en `/var/www/scripts/before-starting.d`.
 
+        ```
+        \docker-init.d
+        |- custom_script.sql
+        |- custom_script.php
+        |- custom_script.sh
+        ```
 
-## Advanced setup
+        Ejemplo de cómo montar los volúmenes en el archivo compose:
 
-### Add post-deployment and before starting scripts
+        ```yaml
+        services:
+            mariadb:
+                image: mariadb:latest
+                environment:
+                    MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+                    MYSQL_DATABASE: ${MYSQL_DATABASE:-dolidb}
+                    MYSQL_USER: ${MYSQL_USER:-dolidbuser}
+                    MYSQL_PASSWORD: ${MYSQL_PASSWORD:-dolidbpass}
 
-It is possible to execute `*.sh`, `*.sql` and/or `*.php` custom files at the end of a deployment or before starting Apache by mounting volumes.
-For scripts to execute during deployment, mount volume in `/var/www/scripts/docker-init.d`.
-For scripts to execute before Apache start, mount volume in `/var/www/scripts/before-starting.d`.
-```
+            web:
+                # Elige la versión de la imagen a instalar
+                # dolibarr/dolibarr:latest (la última versión estable)
+                # dolibarr/dolibarr:develop
+                # dolibarr/dolibarr:x.y.z
+                image: dolibarr/dolibarr
+                environment:
+                    DOLI_INIT_DEMO: ${DOLI_INIT_DEMO:-0}
+                    DOLI_DB_HOST: ${DOLI_DB_HOST:-mariadb}
+                    DOLI_DB_NAME: ${DOLI_DB_NAME:-dolidb}
+                    DOLI_DB_USER: ${DOLI_DB_USER:-dolidbuser}
+                    DOLI_DB_PASSWORD: ${DOLI_DB_PASSWORD:-dolidbpass}
+                    DOLI_URL_ROOT: "${DOLI_URL_ROOT:-http://0.0.0.0}"
+                    DOLI_ADMIN_LOGIN: "${DOLI_ADMIN_LOGIN:-admin}"
+                    DOLI_ADMIN_PASSWORD: "${DOLI_ADMIN_PASSWORD:-admin}"
+                    DOLI_CRON: ${DOLI_CRON:-0}
+                    DOLI_CRON_KEY: ${DOLI_CRON_KEY:-mycronsecurekey}
+                    WWW_USER_ID: ${WWW_USER_ID:-1000}
+                    WWW_GROUP_ID: ${WWW_GROUP_ID:-1000}
+                volumes:
+                  - volume-scripts:/var/www/scripts/docker-init.d
+                  - before-starting-scripts:/var/www/scripts/before-starting.d
+                ports:
+                    - "80:80"
+                links:
+                    - mariadb
+        ```
 \docker-init.d
 |- custom_script.sql
-|- custom_script.php
-|- custom_script.sh
-```
 
-Mount the volumes with compose file : 
+        ### Ajuste de la configuración de Apache
 
-```yaml
-services:
-    mariadb:
-        image: mariadb:latest
-        environment:
-            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
-            MYSQL_DATABASE: ${MYSQL_DATABASE:-dolidb}
-            MYSQL_USER: ${MYSQL_USER:-dolidbuser}
+        #### ServerName
+
+        Si ejecutas `apache2ctl configtest` dentro del contenedor, probablemente verás un mensaje como:
+        > AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using x.y.z.w Set the 'ServerName' directive globally to suppress this message
+
+        Solución sencilla: crea un archivo de texto con el contenido:
+
+        `ServerName dolibarr.example.com`
+
+        Punto de montaje: `/etc/apache2/conf-enabled/servername.conf`
+
+        Solo lectura: sí, móntalo como solo lectura con `:ro`
             MYSQL_PASSWORD: ${MYSQL_PASSWORD:-dolidbpass}
 
-    web:
-        # Choose the version of image to install
-        # dolibarr/dolibarr:latest (the latest stable version)
-        # dolibarr/dolibarr:develop
-        # dolibarr/dolibarr:x.y.z
-        image: dolibarr/dolibarr
-        environment:
-            DOLI_INIT_DEMO: ${DOLI_INIT_DEMO:-0}
-            DOLI_DB_HOST: ${DOLI_DB_HOST:-mariadb}
-            DOLI_DB_NAME: ${DOLI_DB_NAME:-dolidb}
-            DOLI_DB_USER: ${DOLI_DB_USER:-dolidbuser}
-            DOLI_DB_PASSWORD: ${DOLI_DB_PASSWORD:-dolidbpass}
-            DOLI_URL_ROOT: "${DOLI_URL_ROOT:-http://0.0.0.0}"
-            DOLI_ADMIN_LOGIN: "${DOLI_ADMIN_LOGIN:-admin}"
-            DOLI_ADMIN_PASSWORD: "${DOLI_ADMIN_PASSWORD:-admin}"
-            DOLI_CRON: ${DOLI_CRON:-0}
-            DOLI_CRON_KEY: ${DOLI_CRON_KEY:-mycronsecurekey}
-            WWW_USER_ID: ${WWW_USER_ID:-1000}
+        #### ¿Ejecutas Dolibarr detrás de un proxy?
+
+        Si quieres que Dolibarr o los logs del contenedor muestren la IP original y no solo la IP del proxy, debes crear dos archivos de texto:
+
+        *remoteip.load*
+        Este archivo carga el módulo remoteip de Apache: https://httpd.apache.org/docs/current/mod/mod_remoteip.html
+
+        Contenido: `LoadModule remoteip_module /usr/lib/apache2/modules/mod_remoteip.so`
+
+        Punto de montaje: `/etc/apache2/mods-enabled/remoteip.load`
+
+        Solo lectura: sí, móntalo como solo lectura con `:ro`
+
+        *remoteip.conf*
+        Este archivo contiene la configuración de remoteip y también debe montarse como solo lectura dentro del contenedor. El contenido depende de tu proxy y del tipo de cabecera que utilice. Quizás debas habilitar el protocolo proxy, más información en https://httpd.apache.org/docs/current/mod/mod_remoteip.html
+
+        Ejemplo de contenido: `RemoteIPHeader X-Forwarded-For`
+
+        Punto de montaje: `/etc/apache2/mods-enabled/remoteip.conf`
             WWW_GROUP_ID: ${WWW_GROUP_ID:-1000}
         volumes :
-          - volume-scripts:/var/www/scripts/docker-init.d
-          - before-starting-scripts:/var/www/scripts/before-starting.d
-        ports:
-            - "80:80"
-        links:
-            - mariadb
-```
 
+        ### Soporte para PostgreSQL
 
-### Tuning the apache configuration to suit you
+        Estableciendo `DOLI_DB_TYPE` en `pgsql` puedes ejecutar Dolibarr con una base de datos PostgreSQL.
+        Cuando se usa `pgsql`, Dolibarr debe instalarse manualmente en la primera ejecución:
+         - Accede a `http://0.0.0.0/install`;
+         - Sigue el asistente de instalación;
+         - Agrega el archivo `install.lock` dentro del volumen del contenedor `/var/www/html/documents` (ejemplo: `docker-compose exec services-data_dolibarr_1 /bin/bash -c "touch /var/www/html/documents/install.lock"`).
 
-#### ServerName
-
+        En este modo, para actualizar la versión es obligatorio usar la interfaz web:
+         - Elimina el archivo `install.lock` (ejemplo: `docker-compose exec services-data_dolibarr_1 /bin/bash -c "rm -f /var/www/html/documents/install.lock"`).
+         - Accede a `http://0.0.0.0/install`;
+         - Actualiza la base de datos;
+         - Agrega nuevamente el archivo `install.lock` dentro del volumen del contenedor `/var/www/html/documents` (ejemplo: `docker-compose exec services-data_dolibarr_1 /bin/bash -c "touch /var/www/html/documents/install.lock"`).
 If you run apache2ctl configtest inside the container you'll probably get a message like this:
 > AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using x.y.z.w Set the 'ServerName' directive globally to suppress this message
 
-Easy fix, create a single text file
+        ## Solución de problemas
 
-Contents: "ServerName dolibarr.example.com"
+        Si obtienes el error "urllib3.exceptions.URLSchemeUnknown: Not supported URL scheme http+docker" durante docker-compose, prueba actualizar o degradar el paquete pip:
+        `pip install requests==2.31.0`
 
 Mountpoint: "/etc/apache2/conf-enabled/servername.conf"
 
