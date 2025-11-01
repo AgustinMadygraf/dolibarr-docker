@@ -4,3 +4,4 @@ docker-compose-links/
 /.buildpath
 /.project
 /.settings/
+.env
